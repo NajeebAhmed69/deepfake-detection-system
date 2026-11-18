@@ -14,10 +14,11 @@ An end-to-end **AI-Powered Media Authenticity Verification System** developed as
 
 | Role | Name | Affiliation |
 | :--- | :--- | :--- |
+| **Project Supervisor** | **Prof. Dr. Fida Hussain Chandio** | Department of Computer Science, University of Sindh |
 | **Team Leader** | **Mehtab Ali** | Department of Computer Science, University of Sindh |
 | **Co-Team Leader** | **Najeeb Ahmed** | Department of Computer Science, University of Sindh |
 | **Team Member** | **Maryam Ali** | Department of Computer Science, University of Sindh |
-| **Project Supervisor** | **Prof. Dr. Fida Hussain Chandio** | Department of Computer Science, University of Sindh |
+
 
 ---
 
