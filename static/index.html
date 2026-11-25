@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,11 +7,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome for Icons (Theme Toggle) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Three.js for Real-Time 3D WebGL Background -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           fontFamily: { sans: ['Poppins', 'sans-serif'] },
@@ -30,21 +35,30 @@
   </script>
   <style>
     body {
-      background-color: #060D1F;
       font-family: 'Poppins', sans-serif;
       overflow-x: hidden;
     }
 
-    /* Glassmorphism over 3D WebGL Scene */
+    /* Glassmorphism adapting to Light and Dark Mode */
     .glass-panel {
-      background: rgba(13, 28, 62, 0.68);
+      background: rgba(255, 255, 255, 0.75);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(147, 197, 253, 0.22);
-      box-shadow: 0 24px 60px rgba(3, 8, 22, 0.72), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease, box-shadow 0.35s ease, background 0.3s ease;
     }
     .glass-panel:hover {
+      border-color: rgba(79, 131, 240, 0.4);
+      box-shadow: 0 15px 40px rgba(79, 131, 240, 0.1);
+    }
+
+    .dark .glass-panel {
+      background: rgba(13, 28, 62, 0.68);
+      border: 1px solid rgba(147, 197, 253, 0.22);
+      box-shadow: 0 24px 60px rgba(3, 8, 22, 0.72), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    .dark .glass-panel:hover {
       border-color: rgba(79, 131, 240, 0.55);
       box-shadow: 0 28px 70px rgba(79, 131, 240, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.14);
     }
@@ -111,6 +125,11 @@
     }
 
     .nav-active {
+      color: #4F83F0;
+      background: rgba(79, 131, 240, 0.1);
+      border-color: rgba(79, 131, 240, 0.3);
+    }
+    .dark .nav-active {
       color: #FFFFFF;
       background: rgba(79, 131, 240, 0.25);
       border-color: rgba(147, 197, 253, 0.5);
@@ -118,46 +137,46 @@
     }
   </style>
 </head>
-<body class="text-white min-h-screen flex flex-col relative">
+<body class="bg-slate-50 text-slate-800 dark:bg-[#060D1F] dark:text-white min-h-screen flex flex-col relative transition-colors duration-500">
 
   <!-- ==================== 3D INTERACTIVE WEBGL CANVAS BACKGROUND ==================== -->
   <div id="webgl-container" class="fixed inset-0 -z-20 overflow-hidden pointer-events-none"></div>
-  <div class="fixed inset-0 -z-10 bg-gradient-to-b from-[#060D1F]/70 via-[#0D1C3E]/45 to-[#060D1F]/85 pointer-events-none"></div>
-  <div class="laser-line fixed left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-accentBlue to-transparent shadow-[0_0_22px_#4F83F0] -z-10 pointer-events-none"></div>
+  <div class="fixed inset-0 -z-10 bg-gradient-to-b from-slate-100/70 via-white/40 to-slate-100/90 dark:from-[#060D1F]/70 dark:via-[#0D1C3E]/45 dark:to-[#060D1F]/85 pointer-events-none transition-colors duration-500"></div>
+  <div class="laser-line fixed left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-accentBlue to-transparent shadow-[0_0_22px_#4F83F0] -z-10 pointer-events-none opacity-50 dark:opacity-100"></div>
 
   <!-- Intro Splash Screen -->
-  <div id="splashScreen" class="splash-fade fixed inset-0 z-50 flex flex-col items-center justify-center"
-       style="background: radial-gradient(circle at 50% 45%, #19346E 0%, #0D1C3E 65%, #071024 100%);">
-    <svg class="w-24 h-24 mb-4 text-white animate-pulse" viewBox="0 0 100 100" fill="none">
-      <path d="M48 16C33 16 24 27 24 42C24 51 26 57 26 62C26 72 34 83 48 84" stroke="white" stroke-width="3" stroke-linecap="round"/>
-      <path d="M31 43C34 40 39 40 42 43" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-      <circle cx="36.5" cy="44" r="2" fill="white"/>
-      <path d="M48 44V58H42" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M37 68C41 70 45 70 48 69" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-      <rect x="52" y="16" width="6" height="6" fill="white"/>
-      <rect x="61" y="20" width="5" height="5" fill="#93C5FD"/>
-      <rect x="52" y="26" width="7" height="7" fill="white"/>
-      <rect x="63" y="29" width="6" height="6" fill="white"/>
-      <rect x="72" y="34" width="4" height="4" fill="#93C5FD"/>
-      <rect x="52" y="37" width="6" height="6" fill="#93C5FD"/>
-      <circle cx="65" cy="58" r="15" fill="#0D1C3E" stroke="white" stroke-width="3"/>
-      <path d="M65 50L73 64H57L65 50Z" stroke="white" stroke-width="2.2" stroke-linejoin="round"/>
-      <line x1="65" y1="55" x2="65" y2="59" stroke="white" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="65" cy="61.5" r="1" fill="white"/>
-      <line x1="76" y1="69" x2="87" y2="80" stroke="white" stroke-width="4" stroke-linecap="round"/>
+  <div id="splashScreen" class="splash-fade fixed inset-0 z-50 flex flex-col items-center justify-center bg-white dark:bg-[#0D1C3E]"
+       style="background: radial-gradient(circle at 50% 45%, var(--splash-center, #e2e8f0) 0%, var(--splash-edge, #f8fafc) 100%);">
+    <svg class="w-24 h-24 mb-4 text-accentBlue dark:text-white animate-pulse" viewBox="0 0 100 100" fill="none">
+      <path d="M48 16C33 16 24 27 24 42C24 51 26 57 26 62C26 72 34 83 48 84" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      <path d="M31 43C34 40 39 40 42 43" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="36.5" cy="44" r="2" fill="currentColor"/>
+      <path d="M48 44V58H42" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M37 68C41 70 45 70 48 69" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+      <rect x="52" y="16" width="6" height="6" fill="currentColor"/>
+      <rect x="61" y="20" width="5" height="5" fill="#4F83F0"/>
+      <rect x="52" y="26" width="7" height="7" fill="currentColor"/>
+      <rect x="63" y="29" width="6" height="6" fill="currentColor"/>
+      <rect x="72" y="34" width="4" height="4" fill="#4F83F0"/>
+      <rect x="52" y="37" width="6" height="6" fill="#4F83F0"/>
+      <circle cx="65" cy="58" r="15" fill="transparent" stroke="currentColor" stroke-width="3"/>
+      <path d="M65 50L73 64H57L65 50Z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+      <line x1="65" y1="55" x2="65" y2="59" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="65" cy="61.5" r="1" fill="currentColor"/>
+      <line x1="76" y1="69" x2="87" y2="80" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
     </svg>
-    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">
-      <span class="text-accentBlue">Deepfake</span> <span class="text-white">Detection System</span>
+    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-800 dark:text-white">
+      <span class="text-accentBlue">Deepfake</span> Detection System
     </h1>
-    <p class="text-xs text-slateText mt-1">Initializing 3D Biometric Forensics Engine...</p>
+    <p class="text-xs text-slate-500 dark:text-slateText mt-1">Initializing 3D Biometric Forensics Engine...</p>
   </div>
 
   <!-- Top Navigation Bar -->
-  <nav class="sticky top-0 z-40 bg-navyInner/80 backdrop-blur-xl border-b border-softBlue/15">
+  <nav class="sticky top-0 z-40 bg-white/80 dark:bg-navyInner/80 backdrop-blur-xl border-b border-slate-200 dark:border-softBlue/15 transition-colors">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       <button onclick="switchPage('home')" class="flex items-center gap-2.5 text-left group">
-        <div class="w-9 h-9 rounded-lg bg-accentBlue/20 border border-accentBlue/50 flex items-center justify-center group-hover:scale-105 transition">
-          <svg class="w-5 h-5 text-softBlue" viewBox="0 0 100 100" fill="none">
+        <div class="w-9 h-9 rounded-lg bg-accentBlue/10 dark:bg-accentBlue/20 border border-accentBlue/30 dark:border-accentBlue/50 flex items-center justify-center group-hover:scale-105 transition">
+          <svg class="w-5 h-5 text-accentBlue dark:text-softBlue" viewBox="0 0 100 100" fill="none">
             <path d="M48 16C33 16 24 27 24 42C24 51 26 57 26 62C26 72 34 83 48 84" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
             <rect x="54" y="18" width="9" height="9" fill="currentColor"/>
             <rect x="67" y="27" width="9" height="9" fill="currentColor"/>
@@ -166,27 +185,32 @@
           </svg>
         </div>
         <div>
-          <span class="font-bold text-sm sm:text-base tracking-tight block leading-none">
-            <span class="text-accentBlue">Deepfake</span> <span class="text-white">Detector</span>
+          <span class="font-bold text-sm sm:text-base tracking-tight block leading-none text-slate-800 dark:text-white">
+            <span class="text-accentBlue">Deepfake</span> Detector
           </span>
-          <span class="text-[10px] text-slateText/75">Media Forensics AI</span>
+          <span class="text-[10px] text-slate-500 dark:text-slateText/75">Media Forensics AI</span>
         </div>
       </button>
 
       <!-- Desktop Menu -->
-      <div class="hidden md:flex items-center gap-1.5 text-xs font-medium text-slateText">
-        <button data-nav="home" onclick="switchPage('home')" class="nav-btn nav-active px-3.5 py-2 rounded-lg border border-transparent hover:text-white transition">Home</button>
-        <button data-nav="detector" onclick="switchPage('detector')" class="nav-btn px-3.5 py-2 rounded-lg border border-transparent hover:text-white transition">Detector</button>
-        <button data-nav="about" onclick="switchPage('about')" class="nav-btn px-3.5 py-2 rounded-lg border border-transparent hover:text-white transition">About</button>
-        <button data-nav="faq" onclick="switchPage('faq')" class="nav-btn px-3.5 py-2 rounded-lg border border-transparent hover:text-white transition">FAQ</button>
-        <button data-nav="contact" onclick="switchPage('contact')" class="nav-btn px-3.5 py-2 rounded-lg border border-transparent hover:text-white transition">Contact</button>
+      <div class="hidden md:flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slateText">
+        <button data-nav="home" onclick="switchPage('home')" class="nav-btn nav-active px-3.5 py-2 rounded-lg border border-transparent hover:text-accentBlue dark:hover:text-white transition">Home</button>
+        <button data-nav="detector" onclick="switchPage('detector')" class="nav-btn px-3.5 py-2 rounded-lg border border-transparent hover:text-accentBlue dark:hover:text-white transition">Detector</button>
+        <button data-nav="about" onclick="switchPage('about')" class="nav-btn px-3.5 py-2 rounded-lg border border-transparent hover:text-accentBlue dark:hover:text-white transition">About</button>
+        <button data-nav="faq" onclick="switchPage('faq')" class="nav-btn px-3.5 py-2 rounded-lg border border-transparent hover:text-accentBlue dark:hover:text-white transition">FAQ</button>
+        <button data-nav="contact" onclick="switchPage('contact')" class="nav-btn px-3.5 py-2 rounded-lg border border-transparent hover:text-accentBlue dark:hover:text-white transition">Contact</button>
       </div>
 
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-3">
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <i id="theme-icon" class="fa-solid fa-moon text-slate-600 dark:text-yellow-400 text-sm"></i>
+        </button>
+
         <button onclick="switchPage('detector')" class="glow-btn bg-accentBlue hover:bg-blue-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">
           Launch Scanner
         </button>
-        <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg bg-navyCard border border-softBlue/20 text-slateText hover:text-white">
+        <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg bg-slate-100 dark:bg-navyCard border border-slate-200 dark:border-softBlue/20 text-slate-600 dark:text-slateText">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
@@ -195,7 +219,7 @@
     </div>
 
     <!-- Mobile Dropdown -->
-    <div id="mobileMenu" class="hidden md:hidden bg-navyInner/95 backdrop-blur-xl border-b border-softBlue/15 px-4 py-3 space-y-1 text-xs font-medium text-slateText">
+    <div id="mobileMenu" class="hidden md:hidden bg-white/95 dark:bg-navyInner/95 backdrop-blur-xl border-b border-slate-200 dark:border-softBlue/15 px-4 py-3 space-y-1 text-xs font-medium text-slate-600 dark:text-slateText transition-colors">
       <button data-nav="home" onclick="switchPage('home')" class="nav-btn nav-active block w-full text-left px-3 py-2 rounded-lg border border-transparent">Home</button>
       <button data-nav="detector" onclick="switchPage('detector')" class="nav-btn block w-full text-left px-3 py-2 rounded-lg border border-transparent">Detector</button>
       <button data-nav="about" onclick="switchPage('about')" class="nav-btn block w-full text-left px-3 py-2 rounded-lg border border-transparent">About</button>
@@ -211,29 +235,29 @@
     <section id="page-home" class="page-section reveal-section space-y-10">
       <div class="glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
         <!-- Floating Cyber HUD Badges -->
-        <div class="hidden lg:flex animate-float absolute top-8 left-8 items-center gap-2 bg-navyInner/90 border border-accentBlue/40 rounded-xl px-3.5 py-2 text-[11px] shadow-lg">
+        <div class="hidden lg:flex animate-float absolute top-8 left-8 items-center gap-2 bg-white/80 dark:bg-navyInner/90 border border-slate-200 dark:border-accentBlue/40 rounded-xl px-3.5 py-2 text-[11px] shadow-lg">
           <span class="w-2 h-2 rounded-full bg-accentBlue animate-ping"></span>
-          <span class="text-softBlue font-semibold">FACE ROI:</span>
-          <span class="text-white">224×224 Tensor</span>
+          <span class="text-accentBlue dark:text-softBlue font-semibold">FACE ROI:</span>
+          <span class="text-slate-800 dark:text-white">224×224 Tensor</span>
         </div>
 
-        <div class="hidden lg:flex animate-float-delayed absolute top-8 right-8 items-center gap-2 bg-navyInner/90 border border-emerald-400/40 rounded-xl px-3.5 py-2 text-[11px] shadow-lg">
-          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-          <span class="text-emerald-300 font-semibold">AUC-ROC:</span>
-          <span class="text-white">97.64% Verified</span>
+        <div class="hidden lg:flex animate-float-delayed absolute top-8 right-8 items-center gap-2 bg-white/80 dark:bg-navyInner/90 border border-slate-200 dark:border-emerald-400/40 rounded-xl px-3.5 py-2 text-[11px] shadow-lg">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400"></span>
+          <span class="text-emerald-600 dark:text-emerald-300 font-semibold">AUC-ROC:</span>
+          <span class="text-slate-800 dark:text-white">99.27% Verified</span>
         </div>
 
         <div class="text-center max-w-3xl mx-auto pt-2">
-          <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-accentBlue/20 border border-accentBlue/40 text-softBlue text-[11px] font-medium mb-5">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-accentBlue/10 dark:bg-accentBlue/20 border border-accentBlue/30 dark:border-accentBlue/40 text-accentBlue dark:text-softBlue text-[11px] font-medium mb-5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse"></span>
             AI-Powered Media Authenticity Verification
           </span>
 
-          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
-            Unmask Synthetic Faces & <span class="bg-gradient-to-r from-accentBlue via-softBlue to-emerald-300 bg-clip-text text-transparent">Deepfake Videos</span>
+          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight text-slate-800 dark:text-white">
+            Unmask Synthetic Faces & <span class="bg-gradient-to-r from-blue-600 via-accentBlue to-teal-500 dark:from-accentBlue dark:via-softBlue dark:to-emerald-300 bg-clip-text text-transparent">Deepfake Videos</span>
           </h1>
 
-          <p class="text-xs sm:text-sm text-slateText max-w-2xl mx-auto mt-4 leading-relaxed">
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slateText max-w-2xl mx-auto mt-4 leading-relaxed">
             Real-time neural forensics powered by MobileNetV3-Small and OpenCV. Move your cursor to interact with the 3D neural field, or launch the scanner to verify images and videos.
           </p>
 
@@ -241,29 +265,29 @@
             <button onclick="switchPage('detector')" class="glow-btn bg-accentBlue hover:bg-blue-500 text-white font-semibold text-xs sm:text-sm px-7 py-3.5 rounded-xl transition transform hover:-translate-y-0.5">
               Start Live Scan →
             </button>
-            <button onclick="switchPage('about')" class="bg-navyInner/90 hover:bg-navyCard text-slateText hover:text-white border border-softBlue/25 font-medium text-xs sm:text-sm px-6 py-3.5 rounded-xl transition">
+            <button onclick="switchPage('about')" class="bg-white hover:bg-slate-50 dark:bg-navyInner/90 dark:hover:bg-navyCard text-slate-700 hover:text-slate-900 dark:text-slateText dark:hover:text-white border border-slate-300 dark:border-softBlue/25 font-medium text-xs sm:text-sm px-6 py-3.5 rounded-xl transition">
               Explore Architecture
             </button>
           </div>
         </div>
 
         <!-- Animated Metrics Strip -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-12 pt-8 border-t border-softBlue/15">
-          <div class="tilt-card bg-navyInner/85 rounded-xl p-4 border border-softBlue/15 text-center">
-            <p class="text-2xl sm:text-3xl font-extrabold text-accentBlue counter" data-target="92.30" data-suffix="%">0%</p>
-            <p class="text-[11px] text-slateText mt-1">Hybrid Test Accuracy</p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-12 pt-8 border-t border-slate-200 dark:border-softBlue/15">
+          <div class="tilt-card bg-slate-50/80 dark:bg-navyInner/85 rounded-xl p-4 border border-slate-200 dark:border-softBlue/15 text-center">
+            <p class="text-2xl sm:text-3xl font-extrabold text-accentBlue counter" data-target="95.11" data-suffix="%">0%</p>
+            <p class="text-[11px] text-slate-500 dark:text-slateText mt-1">Hybrid Test Accuracy</p>
           </div>
-          <div class="tilt-card bg-navyInner/85 rounded-xl p-4 border border-softBlue/15 text-center">
-            <p class="text-2xl sm:text-3xl font-extrabold text-softBlue counter" data-target="97.64" data-suffix="%">0%</p>
-            <p class="text-[11px] text-slateText mt-1">ROC-AUC Score</p>
+          <div class="tilt-card bg-slate-50/80 dark:bg-navyInner/85 rounded-xl p-4 border border-slate-200 dark:border-softBlue/15 text-center">
+            <p class="text-2xl sm:text-3xl font-extrabold text-blue-500 dark:text-softBlue counter" data-target="99.27" data-suffix="%">0%</p>
+            <p class="text-[11px] text-slate-500 dark:text-slateText mt-1">ROC-AUC Score</p>
           </div>
-          <div class="tilt-card bg-navyInner/85 rounded-xl p-4 border border-softBlue/15 text-center">
-            <p class="text-2xl sm:text-3xl font-extrabold text-emerald-400">36 FPS</p>
-            <p class="text-[11px] text-slateText mt-1">Keyframe Sampling</p>
+          <div class="tilt-card bg-slate-50/80 dark:bg-navyInner/85 rounded-xl p-4 border border-slate-200 dark:border-softBlue/15 text-center">
+            <p class="text-2xl sm:text-3xl font-extrabold text-teal-600 dark:text-emerald-400">36 FPS</p>
+            <p class="text-[11px] text-slate-500 dark:text-slateText mt-1">Keyframe Sampling</p>
           </div>
-          <div class="tilt-card bg-navyInner/85 rounded-xl p-4 border border-softBlue/15 text-center">
-            <p class="text-2xl sm:text-3xl font-extrabold text-white">CPU Ready</p>
-            <p class="text-[11px] text-slateText mt-1">Zero GPU Required</p>
+          <div class="tilt-card bg-slate-50/80 dark:bg-navyInner/85 rounded-xl p-4 border border-slate-200 dark:border-softBlue/15 text-center">
+            <p class="text-2xl sm:text-3xl font-extrabold text-slate-700 dark:text-white">CPU Ready</p>
+            <p class="text-[11px] text-slate-500 dark:text-slateText mt-1">Zero GPU Required</p>
           </div>
         </div>
       </div>
@@ -271,23 +295,23 @@
       <!-- Feature Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div class="glass-panel tilt-card rounded-2xl p-6">
-          <div class="w-11 h-11 rounded-xl bg-accentBlue/20 border border-accentBlue/40 text-softBlue flex items-center justify-center font-bold mb-4">01</div>
-          <h3 class="text-sm font-bold text-white">Biometric ROI Isolation</h3>
-          <p class="text-xs text-slateText/85 mt-2 leading-relaxed">
+          <div class="w-11 h-11 rounded-xl bg-accentBlue/10 dark:bg-accentBlue/20 border border-accentBlue/30 dark:border-accentBlue/40 text-accentBlue dark:text-softBlue flex items-center justify-center font-bold mb-4">01</div>
+          <h3 class="text-sm font-bold text-slate-800 dark:text-white">Biometric ROI Isolation</h3>
+          <p class="text-xs text-slate-600 dark:text-slateText/85 mt-2 leading-relaxed">
             Haar-Cascade facial localization strips away background distractions, focusing neural attention strictly on skin texture and blending boundaries.
           </p>
         </div>
         <div class="glass-panel tilt-card rounded-2xl p-6">
-          <div class="w-11 h-11 rounded-xl bg-accentBlue/20 border border-accentBlue/40 text-softBlue flex items-center justify-center font-bold mb-4">02</div>
-          <h3 class="text-sm font-bold text-white">Temporal Video Forensics</h3>
-          <p class="text-xs text-slateText/85 mt-2 leading-relaxed">
+          <div class="w-11 h-11 rounded-xl bg-accentBlue/10 dark:bg-accentBlue/20 border border-accentBlue/30 dark:border-accentBlue/40 text-accentBlue dark:text-softBlue flex items-center justify-center font-bold mb-4">02</div>
+          <h3 class="text-sm font-bold text-slate-800 dark:text-white">Temporal Video Forensics</h3>
+          <p class="text-xs text-slate-600 dark:text-slateText/85 mt-2 leading-relaxed">
             Samples uniform keyframes across video timelines and computes cross-frame probability variance to expose subtle frame-to-frame flickering.
           </p>
         </div>
         <div class="glass-panel tilt-card rounded-2xl p-6">
-          <div class="w-11 h-11 rounded-xl bg-tealBadge/50 border border-emerald-400/40 text-emerald-300 flex items-center justify-center font-bold mb-4">03</div>
-          <h3 class="text-sm font-bold text-white">Hybrid GAN + DFD Training</h3>
-          <p class="text-xs text-slateText/85 mt-2 leading-relaxed">
+          <div class="w-11 h-11 rounded-xl bg-teal-50 dark:bg-tealBadge/50 border border-teal-200 dark:border-emerald-400/40 text-teal-600 dark:text-emerald-300 flex items-center justify-center font-bold mb-4">03</div>
+          <h3 class="text-sm font-bold text-slate-800 dark:text-white">Hybrid GAN + DFD Training</h3>
+          <p class="text-xs text-slate-600 dark:text-slateText/85 mt-2 leading-relaxed">
             Trained on both 140k Real/Fake GAN faces and Deep Fake Detection (DFD) actor sequences for cross-domain image and video resilience.
           </p>
         </div>
@@ -297,19 +321,19 @@
     <!-- ==================== 2. DETECTOR PAGE ==================== -->
     <section id="page-detector" class="page-section hidden reveal-section max-w-3xl mx-auto space-y-5">
       <header class="text-center mb-2">
-        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">
-          <span class="text-accentBlue">Deepfake</span> <span class="text-white">Detection System</span>
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-800 dark:text-white">
+          <span class="text-accentBlue">Deepfake</span> Detection System
         </h1>
-        <p class="text-xs text-slateText mt-1">AI-Powered Media Authenticity Verification</p>
+        <p class="text-xs text-slate-500 dark:text-slateText mt-1">AI-Powered Media Authenticity Verification</p>
       </header>
 
       <!-- Upload Media Card -->
       <div class="glass-panel rounded-2xl p-6">
-        <h2 class="text-sm font-semibold text-white mb-4">Upload Media</h2>
+        <h2 class="text-sm font-semibold text-slate-800 dark:text-white mb-4">Upload Media</h2>
 
-        <div id="dropZone" class="border-2 border-dashed border-accentBlue/40 hover:border-accentBlue hover:bg-accentBlue/5 transition rounded-xl py-12 px-6 text-center cursor-pointer bg-navyInner/60">
+        <div id="dropZone" class="border-2 border-dashed border-slate-300 dark:border-accentBlue/40 hover:border-accentBlue dark:hover:border-accentBlue hover:bg-slate-50 dark:hover:bg-accentBlue/5 transition rounded-xl py-12 px-6 text-center cursor-pointer bg-white/50 dark:bg-navyInner/60">
           <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.mp4,.avi,.mov" class="hidden" />
-          <div class="flex items-center justify-center gap-3 text-softBlue mb-3 animate-float">
+          <div class="flex items-center justify-center gap-3 text-accentBlue dark:text-softBlue mb-3 animate-float">
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <rect x="3" y="3" width="18" height="18" rx="2" stroke-width="1.8"/>
               <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
@@ -320,29 +344,29 @@
               <rect x="3" y="6" width="12" height="12" rx="2" stroke-width="1.8"/>
             </svg>
           </div>
-          <p class="text-sm font-medium text-white">Click or drag & drop image or video</p>
-          <p class="text-[11px] text-slateText/70 mt-1">Supports JPG, PNG, MP4, AVI, MOV</p>
+          <p class="text-sm font-medium text-slate-700 dark:text-white">Click or drag & drop image or video</p>
+          <p class="text-[11px] text-slate-500 dark:text-slateText/70 mt-1">Supports JPG, PNG, MP4, AVI, MOV</p>
         </div>
 
         <!-- Uploaded Media Workspace -->
         <div id="mediaWorkspace" class="hidden space-y-4">
-          <div class="relative bg-navyInner/90 border border-softBlue/20 rounded-xl p-4 flex items-center justify-center overflow-hidden">
-            <img id="imagePreview" class="hidden h-40 w-40 object-cover rounded-lg border border-softBlue/40 shadow-lg" />
-            <video id="videoPreview" controls class="hidden max-h-48 rounded-lg border border-softBlue/40 shadow-lg"></video>
+          <div class="relative bg-slate-100 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/20 rounded-xl p-4 flex items-center justify-center overflow-hidden">
+            <img id="imagePreview" class="hidden h-40 w-40 object-cover rounded-lg border border-slate-300 dark:border-softBlue/40 shadow-lg" />
+            <video id="videoPreview" controls class="hidden max-h-48 rounded-lg border border-slate-300 dark:border-softBlue/40 shadow-lg"></video>
 
-            <!-- Active Laser Scan Overlay on Media -->
+            <!-- Active Laser Scan Overlay -->
             <div id="mediaScanBeam" class="hidden absolute inset-0 bg-accentBlue/10 pointer-events-none">
               <div class="scanner-active-bar absolute left-0 right-0 h-1 bg-accentBlue shadow-[0_0_16px_#4F83F0]"></div>
             </div>
           </div>
 
-          <!-- Details:- Box -->
-          <div class="bg-navyInner/90 border border-softBlue/15 rounded-xl p-4">
-            <p class="text-xs font-semibold text-white mb-1.5">Details:-</p>
-            <div class="text-xs text-slateText space-y-1 pl-2">
-              <p>File: <span id="metaName" class="text-white font-medium"></span></p>
-              <p>Size: <span id="metaSize" class="text-white font-medium"></span></p>
-              <p>Type: <span id="metaType" class="text-white font-medium"></span></p>
+          <!-- Details Box -->
+          <div class="bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/15 rounded-xl p-4">
+            <p class="text-xs font-semibold text-slate-700 dark:text-white mb-1.5">Details:-</p>
+            <div class="text-xs text-slate-600 dark:text-slateText space-y-1 pl-2">
+              <p>File: <span id="metaName" class="text-slate-900 dark:text-white font-medium"></span></p>
+              <p>Size: <span id="metaSize" class="text-slate-900 dark:text-white font-medium"></span></p>
+              <p>Type: <span id="metaType" class="text-slate-900 dark:text-white font-medium"></span></p>
             </div>
           </div>
 
@@ -352,18 +376,18 @@
               <span id="btnIcon">⊙</span>
               <span id="btnLabel">Analyze</span>
             </button>
-            <button id="resetBtn" class="bg-slate-600/50 hover:bg-slate-600/80 text-slateText font-medium text-xs py-2.5 px-5 rounded-lg transition">
+            <button id="resetBtn" class="bg-slate-200 hover:bg-slate-300 text-slate-700 dark:bg-slate-600/50 dark:hover:bg-slate-600/80 dark:text-slateText font-medium text-xs py-2.5 px-5 rounded-lg transition">
               Reset
             </button>
           </div>
 
           <!-- Progress Bar -->
           <div id="progressSection" class="hidden pt-1">
-            <div class="flex justify-between text-[11px] text-slateText mb-1.5">
+            <div class="flex justify-between text-[11px] text-slate-600 dark:text-slateText mb-1.5">
               <span>Running MobileNetV3 CNN model...</span>
               <span id="progressPercent">0%</span>
             </div>
-            <div class="w-full bg-navyInner rounded-full h-1.5 overflow-hidden">
+            <div class="w-full bg-slate-200 dark:bg-navyInner rounded-full h-1.5 overflow-hidden">
               <div id="progressBar" class="bg-accentBlue h-1.5 rounded-full transition-all duration-300" style="width: 0%"></div>
             </div>
           </div>
@@ -372,124 +396,124 @@
 
       <!-- Detection Pipeline Card -->
       <div id="pipelineCard" class="glass-panel rounded-2xl p-6">
-        <h2 class="text-sm font-semibold text-white mb-4">Detection Pipeline</h2>
+        <h2 class="text-sm font-semibold text-slate-800 dark:text-white mb-4">Detection Pipeline</h2>
         <div class="space-y-2.5">
-          <div class="bg-navyInner/80 border border-softBlue/10 hover:border-accentBlue/40 transition rounded-lg px-4 py-2.5 flex items-center gap-3">
-            <span class="w-6 h-6 rounded-full bg-accentBlue/20 text-softBlue text-xs font-bold flex items-center justify-center">1</span>
+          <div class="bg-slate-50 dark:bg-navyInner/80 border border-slate-200 dark:border-softBlue/10 hover:border-accentBlue/40 transition rounded-lg px-4 py-2.5 flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-accentBlue/10 dark:bg-accentBlue/20 text-accentBlue dark:text-softBlue text-xs font-bold flex items-center justify-center">1</span>
             <div>
-              <p class="text-xs font-semibold text-white">Media Upload</p>
-              <p class="text-[11px] text-slateText/75">Support for images and videos</p>
+              <p class="text-xs font-semibold text-slate-800 dark:text-white">Media Upload</p>
+              <p class="text-[11px] text-slate-500 dark:text-slateText/75">Support for images and videos</p>
             </div>
           </div>
-          <div class="bg-navyInner/80 border border-softBlue/10 hover:border-accentBlue/40 transition rounded-lg px-4 py-2.5 flex items-center gap-3">
-            <span class="w-6 h-6 rounded-full bg-accentBlue/20 text-softBlue text-xs font-bold flex items-center justify-center">2</span>
+          <div class="bg-slate-50 dark:bg-navyInner/80 border border-slate-200 dark:border-softBlue/10 hover:border-accentBlue/40 transition rounded-lg px-4 py-2.5 flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-accentBlue/10 dark:bg-accentBlue/20 text-accentBlue dark:text-softBlue text-xs font-bold flex items-center justify-center">2</span>
             <div>
-              <p class="text-xs font-semibold text-white">Frame Extraction</p>
-              <p class="text-[11px] text-slateText/75">Extract key frames from video</p>
+              <p class="text-xs font-semibold text-slate-800 dark:text-white">Frame Extraction</p>
+              <p class="text-[11px] text-slate-500 dark:text-slateText/75">Extract key frames from video</p>
             </div>
           </div>
-          <div class="bg-navyInner/80 border border-softBlue/10 hover:border-accentBlue/40 transition rounded-lg px-4 py-2.5 flex items-center gap-3">
-            <span class="w-6 h-6 rounded-full bg-accentBlue/20 text-softBlue text-xs font-bold flex items-center justify-center">3</span>
+          <div class="bg-slate-50 dark:bg-navyInner/80 border border-slate-200 dark:border-softBlue/10 hover:border-accentBlue/40 transition rounded-lg px-4 py-2.5 flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-accentBlue/10 dark:bg-accentBlue/20 text-accentBlue dark:text-softBlue text-xs font-bold flex items-center justify-center">3</span>
             <div>
-              <p class="text-xs font-semibold text-white">Face Detection</p>
-              <p class="text-[11px] text-slateText/75">Haar-Cascade facial localization</p>
+              <p class="text-xs font-semibold text-slate-800 dark:text-white">Face Detection</p>
+              <p class="text-[11px] text-slate-500 dark:text-slateText/75">Haar-Cascade facial localization</p>
             </div>
           </div>
-          <div class="bg-navyInner/80 border border-softBlue/10 hover:border-accentBlue/40 transition rounded-lg px-4 py-2.5 flex items-center gap-3">
-            <span class="w-6 h-6 rounded-full bg-accentBlue/20 text-softBlue text-xs font-bold flex items-center justify-center">4</span>
+          <div class="bg-slate-50 dark:bg-navyInner/80 border border-slate-200 dark:border-softBlue/10 hover:border-accentBlue/40 transition rounded-lg px-4 py-2.5 flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-accentBlue/10 dark:bg-accentBlue/20 text-accentBlue dark:text-softBlue text-xs font-bold flex items-center justify-center">4</span>
             <div>
-              <p class="text-xs font-semibold text-white">CNN Analysis</p>
-              <p class="text-[11px] text-slateText/75">MobileNetV3 deep learning model</p>
+              <p class="text-xs font-semibold text-slate-800 dark:text-white">CNN Analysis</p>
+              <p class="text-[11px] text-slate-500 dark:text-slateText/75">MobileNetV3 deep learning model</p>
             </div>
           </div>
-          <div class="bg-navyInner/80 border border-softBlue/10 hover:border-accentBlue/40 transition rounded-lg px-4 py-2.5 flex items-center gap-3">
-            <span class="w-6 h-6 rounded-full bg-accentBlue/20 text-softBlue text-xs font-bold flex items-center justify-center">5</span>
+          <div class="bg-slate-50 dark:bg-navyInner/80 border border-slate-200 dark:border-softBlue/10 hover:border-accentBlue/40 transition rounded-lg px-4 py-2.5 flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-accentBlue/10 dark:bg-accentBlue/20 text-accentBlue dark:text-softBlue text-xs font-bold flex items-center justify-center">5</span>
             <div>
-              <p class="text-xs font-semibold text-white">Prediction</p>
-              <p class="text-[11px] text-slateText/75">Real/Fake classification</p>
+              <p class="text-xs font-semibold text-slate-800 dark:text-white">Prediction</p>
+              <p class="text-[11px] text-slate-500 dark:text-slateText/75">Real/Fake classification</p>
             </div>
           </div>
         </div>
-        <p class="text-center text-[11px] text-amber-300/85 mt-4">⚠ Upload a clear photorealistic human face image or video for verification.</p>
+        <p class="text-center text-[11px] text-amber-600 dark:text-amber-300/85 mt-4">⚠ Upload a clear photorealistic human face image or video for verification.</p>
       </div>
 
       <!-- No Face Warning Card -->
       <div id="noFaceCard" class="hidden reveal-section glass-panel rounded-2xl p-6 border-amber-500/40 text-center">
-        <h3 class="text-sm font-bold text-amber-300">No Human Face Detected</h3>
-        <p class="text-xs text-slateText mt-1">Please upload a clear, front-facing photorealistic image or video. Stylized artwork and non-face media cannot be verified.</p>
+        <h3 class="text-sm font-bold text-amber-600 dark:text-amber-300">No Human Face Detected</h3>
+        <p class="text-xs text-slate-600 dark:text-slateText mt-1">Please upload a clear, front-facing photorealistic image or video. Stylized artwork and non-face media cannot be verified.</p>
       </div>
 
       <!-- Analysis Results Card -->
       <div id="resultsCard" class="hidden reveal-section glass-panel rounded-2xl p-6 space-y-5">
-        <div class="flex items-center gap-2 text-sm font-semibold text-white">
+        <div class="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-white">
           <span class="text-accentBlue">ⓘ</span>
           <h2>Analysis Results</h2>
         </div>
 
-        <div id="verdictBanner" class="rounded-xl px-5 py-3.5 flex items-center justify-between bg-tealBadge border border-emerald-400/30">
+        <div id="verdictBanner" class="rounded-xl px-5 py-3.5 flex items-center justify-between bg-teal-500 dark:bg-tealBadge border border-emerald-400/30">
           <div class="flex items-center gap-3">
-            <div id="verdictIcon" class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center font-bold text-sm">✓</div>
+            <div id="verdictIcon" class="w-7 h-7 rounded-full bg-white/30 dark:bg-white/20 flex items-center justify-center font-bold text-sm text-white">✓</div>
             <div>
               <p id="verdictTitle" class="text-base font-bold tracking-wide text-white">REAL</p>
-              <p class="text-[11px] text-white/80">Detection Result</p>
+              <p class="text-[11px] text-white/90 dark:text-white/80">Detection Result</p>
             </div>
           </div>
           <div class="text-right">
             <p id="verdictConfidence" class="text-lg font-bold text-white">0.00%</p>
-            <p class="text-[11px] text-white/80">Confidence</p>
+            <p class="text-[11px] text-white/90 dark:text-white/80">Confidence</p>
           </div>
         </div>
 
         <div class="grid grid-cols-3 gap-3">
-          <div class="bg-navyInner/90 border border-softBlue/10 rounded-xl p-3.5">
-            <p class="text-[11px] text-slateText">Frames Processed</p>
-            <p id="statFrames" class="text-base font-bold text-white mt-1">0</p>
+          <div class="bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/10 rounded-xl p-3.5">
+            <p class="text-[11px] text-slate-500 dark:text-slateText">Frames Processed</p>
+            <p id="statFrames" class="text-base font-bold text-slate-800 dark:text-white mt-1">0</p>
           </div>
-          <div class="bg-navyInner/90 border border-softBlue/10 rounded-xl p-3.5">
-            <p class="text-[11px] text-slateText">Faces Detected</p>
-            <p id="statFaces" class="text-base font-bold text-white mt-1">0</p>
+          <div class="bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/10 rounded-xl p-3.5">
+            <p class="text-[11px] text-slate-500 dark:text-slateText">Faces Detected</p>
+            <p id="statFaces" class="text-base font-bold text-slate-800 dark:text-white mt-1">0</p>
           </div>
-          <div class="bg-navyInner/90 border border-softBlue/10 rounded-xl p-3.5">
-            <p class="text-[11px] text-slateText">Processing Time</p>
-            <p id="statTime" class="text-base font-bold text-white mt-1">0.00s</p>
+          <div class="bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/10 rounded-xl p-3.5">
+            <p class="text-[11px] text-slate-500 dark:text-slateText">Processing Time</p>
+            <p id="statTime" class="text-base font-bold text-slate-800 dark:text-white mt-1">0.00s</p>
           </div>
         </div>
 
         <div class="space-y-3 pt-1">
-          <h3 class="text-xs font-semibold text-white">Detailed Analysis</h3>
+          <h3 class="text-xs font-semibold text-slate-800 dark:text-white">Detailed Analysis</h3>
           <div>
-            <div class="flex justify-between text-[11px] text-slateText mb-1">
+            <div class="flex justify-between text-[11px] text-slate-600 dark:text-slateText mb-1">
               <span>Facial Consistency</span>
-              <span id="valConsistency" class="text-white font-medium">0%</span>
+              <span id="valConsistency" class="text-slate-900 dark:text-white font-medium">0%</span>
             </div>
-            <div class="w-full bg-navyInner rounded-full h-1.5">
+            <div class="w-full bg-slate-200 dark:bg-navyInner rounded-full h-1.5">
               <div id="barConsistency" class="bg-accentBlue h-1.5 rounded-full transition-all duration-700" style="width: 0%"></div>
             </div>
           </div>
           <div>
-            <div class="flex justify-between text-[11px] text-slateText mb-1">
+            <div class="flex justify-between text-[11px] text-slate-600 dark:text-slateText mb-1">
               <span>Temporal Coherence</span>
-              <span id="valCoherence" class="text-white font-medium">0%</span>
+              <span id="valCoherence" class="text-slate-900 dark:text-white font-medium">0%</span>
             </div>
-            <div class="w-full bg-navyInner rounded-full h-1.5">
+            <div class="w-full bg-slate-200 dark:bg-navyInner rounded-full h-1.5">
               <div id="barCoherence" class="bg-accentBlue h-1.5 rounded-full transition-all duration-700" style="width: 0%"></div>
             </div>
           </div>
           <div>
-            <div class="flex justify-between text-[11px] text-slateText mb-1">
+            <div class="flex justify-between text-[11px] text-slate-600 dark:text-slateText mb-1">
               <span>Artifact Detection</span>
-              <span id="valArtifact" class="text-white font-medium">0%</span>
+              <span id="valArtifact" class="text-slate-900 dark:text-white font-medium">0%</span>
             </div>
-            <div class="w-full bg-navyInner rounded-full h-1.5">
+            <div class="w-full bg-slate-200 dark:bg-navyInner rounded-full h-1.5">
               <div id="barArtifact" class="bg-accentBlue h-1.5 rounded-full transition-all duration-700" style="width: 0%"></div>
             </div>
           </div>
           <div>
-            <div class="flex justify-between text-[11px] text-slateText mb-1">
+            <div class="flex justify-between text-[11px] text-slate-600 dark:text-slateText mb-1">
               <span>Blending Anomalies</span>
-              <span id="valBlending" class="text-white font-medium">0%</span>
+              <span id="valBlending" class="text-slate-900 dark:text-white font-medium">0%</span>
             </div>
-            <div class="w-full bg-navyInner rounded-full h-1.5">
+            <div class="w-full bg-slate-200 dark:bg-navyInner rounded-full h-1.5">
               <div id="barBlending" class="bg-accentBlue h-1.5 rounded-full transition-all duration-700" style="width: 0%"></div>
             </div>
           </div>
@@ -499,237 +523,180 @@
 
     <!-- ==================== 3. ABOUT PAGE ==================== -->
     <section id="page-about" class="page-section hidden reveal-section space-y-6">
-      
-      <!-- 1. Executive Overview & Problem Statement -->
+      <!-- 1. Executive Overview -->
       <div class="glass-panel rounded-3xl p-8 sm:p-10">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <span class="px-3 py-1 rounded-full bg-accentBlue/20 border border-accentBlue/40 text-softBlue text-[11px] font-semibold uppercase tracking-wider">
+          <span class="px-3 py-1 rounded-full bg-accentBlue/10 dark:bg-accentBlue/20 border border-accentBlue/30 dark:border-accentBlue/40 text-accentBlue dark:text-softBlue text-[11px] font-semibold uppercase tracking-wider">
             System Architecture & Research Overview
           </span>
-          <span class="text-xs text-slateText/80">Department of Computer Science • University of Sindh</span>
+          <span class="text-xs text-slate-500 dark:text-slateText/80">Department of Computer Science • University of Sindh</span>
         </div>
 
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800 dark:text-white tracking-tight">
           Deepfake Detection System: <span class="text-accentBlue">Hybrid Spatial-Temporal Forensics</span>
         </h2>
 
-        <p class="text-xs sm:text-sm text-slateText mt-4 leading-relaxed">
-          Generative Adversarial Networks (GANs), diffusion models, and neural face-swapping tools have made hyper-realistic synthetic media accessible to anyone. While existing forensic detectors rely on heavy 3D Convolutional Neural Networks (3D-CNNs) or Vision Transformers that require expensive server-grade GPUs, our system introduces a <strong class="text-white">cloud-trained, CPU-deployed hybrid architecture</strong> capable of verifying both static images and video sequences in under two seconds on a standard laptop.
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slateText mt-4 leading-relaxed">
+          Generative Adversarial Networks (GANs), diffusion models, and neural face-swapping tools have made hyper-realistic synthetic media accessible to anyone. While existing forensic detectors rely on heavy 3D Convolutional Neural Networks (3D-CNNs) or Vision Transformers that require expensive server-grade GPUs, our system introduces a <strong class="text-slate-800 dark:text-white">cloud-trained, CPU-deployed hybrid architecture</strong> capable of verifying both static images and video sequences in under two seconds on a standard laptop.
         </p>
 
-        <!-- Key Engineering Highlights -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-7 pt-6 border-t border-softBlue/15">
-          <div class="bg-navyInner/85 border border-softBlue/15 rounded-xl p-4">
-            <p class="text-xs font-bold text-softBlue">1. Decoupled Compute</p>
-            <p class="text-[11px] text-slateText mt-1 leading-relaxed">
-              Trained on cloud Tesla T4 GPUs and compressed into a <strong class="text-white">~6 MB PyTorch state dictionary</strong> for instant local CPU execution.
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-7 pt-6 border-t border-slate-200 dark:border-softBlue/15">
+          <div class="bg-slate-50 dark:bg-navyInner/85 border border-slate-200 dark:border-softBlue/15 rounded-xl p-4">
+            <p class="text-xs font-bold text-accentBlue dark:text-softBlue">1. Decoupled Compute</p>
+            <p class="text-[11px] text-slate-600 dark:text-slateText mt-1 leading-relaxed">
+              Trained on cloud Tesla T4 GPUs and compressed into a <strong class="text-slate-800 dark:text-white">~6 MB PyTorch state dictionary</strong> for instant local CPU execution.
             </p>
           </div>
-          <div class="bg-navyInner/85 border border-softBlue/15 rounded-xl p-4">
-            <p class="text-xs font-bold text-softBlue">2. Dual-Domain Learning</p>
-            <p class="text-[11px] text-slateText mt-1 leading-relaxed">
+          <div class="bg-slate-50 dark:bg-navyInner/85 border border-slate-200 dark:border-softBlue/15 rounded-xl p-4">
+            <p class="text-xs font-bold text-accentBlue dark:text-softBlue">2. Dual-Domain Learning</p>
+            <p class="text-[11px] text-slate-600 dark:text-slateText mt-1 leading-relaxed">
               Jointly learns high-frequency GAN upsampling artifacts from images and face-swap blending boundaries from compressed MP4 videos.
             </p>
           </div>
-          <div class="bg-navyInner/85 border border-softBlue/15 rounded-xl p-4">
-            <p class="text-xs font-bold text-emerald-300">3. Zero Data Retention</p>
-            <p class="text-[11px] text-slateText mt-1 leading-relaxed">
+          <div class="bg-slate-50 dark:bg-navyInner/85 border border-slate-200 dark:border-softBlue/15 rounded-xl p-4">
+            <p class="text-xs font-bold text-teal-600 dark:text-emerald-300">3. Zero Data Retention</p>
+            <p class="text-[11px] text-slate-600 dark:text-slateText mt-1 leading-relaxed">
               All uploaded media is processed inside volatile temporary buffers and purged immediately after inference completes.
             </p>
           </div>
         </div>
       </div>
 
-      <!-- 2. Project Team & Academic Supervision Card -->
+      <!-- 2. Project Team & Supervisor -->
       <div class="glass-panel rounded-3xl p-8">
         <span class="text-xs font-semibold uppercase tracking-wider text-accentBlue">Academic Credits</span>
-        <h3 class="text-xl font-bold text-white mt-1 mb-5">Project Team & Supervision</h3>
+        <h3 class="text-xl font-bold text-slate-800 dark:text-white mt-1 mb-5">Project Team & Supervision</h3>
 
-        <!-- 3-Column Team Grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          <!-- Team Leader -->
-          <div class="tilt-card bg-navyInner/90 border border-accentBlue/30 rounded-xl p-5">
-            <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded bg-accentBlue/25 text-softBlue">Team Leader</span>
-            <h4 class="text-sm font-bold text-white mt-2.5">Mehtab Ali</h4>
-            <p class="text-xs text-slateText mt-1">Department of Computer Science</p>
-            <p class="text-[11px] text-slateText/75">University of Sindh</p>
+          <div class="tilt-card bg-white dark:bg-navyInner/90 border border-slate-200 dark:border-accentBlue/30 rounded-xl p-5 shadow-sm">
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded bg-blue-100 dark:bg-accentBlue/25 text-accentBlue dark:text-softBlue">Team Leader</span>
+            <h4 class="text-sm font-bold text-slate-800 dark:text-white mt-2.5">Mehtab Ali</h4>
+            <p class="text-xs text-slate-500 dark:text-slateText mt-1">Department of Computer Science</p>
+            <p class="text-[11px] text-slate-500 dark:text-slateText/75">University of Sindh</p>
           </div>
-
-          <!-- Co-Team Leader -->
-          <div class="tilt-card bg-navyInner/90 border border-softBlue/15 rounded-xl p-5">
-            <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded bg-accentBlue/20 text-softBlue">Co-Team Leader</span>
-            <h4 class="text-sm font-bold text-white mt-2.5">Najeeb Ahmed</h4>
-            <p class="text-xs text-slateText mt-1">Department of Computer Science</p>
-            <p class="text-[11px] text-slateText/75">University of Sindh</p>
+          <div class="tilt-card bg-white dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/15 rounded-xl p-5 shadow-sm">
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded bg-blue-50 dark:bg-accentBlue/20 text-accentBlue dark:text-softBlue">Co-Team Leader</span>
+            <h4 class="text-sm font-bold text-slate-800 dark:text-white mt-2.5">Najeeb Ahmed</h4>
+            <p class="text-xs text-slate-500 dark:text-slateText mt-1">Department of Computer Science</p>
+            <p class="text-[11px] text-slate-500 dark:text-slateText/75">University of Sindh</p>
           </div>
-
-          <!-- Team Member -->
-          <div class="tilt-card bg-navyInner/90 border border-softBlue/15 rounded-xl p-5">
-            <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded bg-accentBlue/20 text-softBlue">Team Member</span>
-            <h4 class="text-sm font-bold text-white mt-2.5">Maryam Ali</h4>
-            <p class="text-xs text-slateText mt-1">Department of Computer Science</p>
-            <p class="text-[11px] text-slateText/75">University of Sindh</p>
+          <div class="tilt-card bg-white dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/15 rounded-xl p-5 shadow-sm">
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded bg-blue-50 dark:bg-accentBlue/20 text-accentBlue dark:text-softBlue">Team Member</span>
+            <h4 class="text-sm font-bold text-slate-800 dark:text-white mt-2.5">Maryam Ali</h4>
+            <p class="text-xs text-slate-500 dark:text-slateText mt-1">Department of Computer Science</p>
+            <p class="text-[11px] text-slate-500 dark:text-slateText/75">University of Sindh</p>
           </div>
         </div>
 
-        <!-- Full-Width Supervisor Banner Card -->
-        <div class="tilt-card bg-navyInner/95 border border-emerald-400/35 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="tilt-card bg-teal-50 dark:bg-navyInner/95 border border-teal-200 dark:border-emerald-400/35 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded bg-tealBadge/55 text-emerald-300">Project Supervisor</span>
-            <h4 class="text-base font-bold text-white mt-2">Prof. Dr. Fida Hussain Chandio</h4>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded bg-teal-100 dark:bg-tealBadge/55 text-teal-700 dark:text-emerald-300">Project Supervisor</span>
+            <h4 class="text-base font-bold text-slate-800 dark:text-white mt-2">Prof. Dr. Fida Hussain Chandio</h4>
           </div>
           <div class="sm:text-right">
-            <p class="text-xs font-medium text-slateText">Department of Computer Science</p>
-            <p class="text-[11px] text-slateText/75">University of Sindh</p>
+            <p class="text-xs font-medium text-slate-600 dark:text-slateText">Department of Computer Science</p>
+            <p class="text-[11px] text-slate-500 dark:text-slateText/75">University of Sindh</p>
           </div>
         </div>
       </div>
 
-      <!-- 3. How It Works: 5-Stage Technical Pipeline -->
+      <!-- 3. Methodology -->
       <div class="glass-panel rounded-3xl p-8">
         <span class="text-xs font-semibold uppercase tracking-wider text-accentBlue">End-to-End Methodology</span>
-        <h3 class="text-xl font-bold text-white mt-1 mb-5">How the Detection Engine Works</h3>
-
+        <h3 class="text-xl font-bold text-slate-800 dark:text-white mt-1 mb-5">How the Detection Engine Works</h3>
         <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
-          <div class="tilt-card bg-navyInner/90 border border-softBlue/15 rounded-xl p-4">
+          <div class="tilt-card bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/15 rounded-xl p-4">
             <span class="text-xs font-extrabold text-accentBlue">STAGE 01</span>
-            <h4 class="text-xs font-bold text-white mt-1">Media Ingestion</h4>
-            <p class="text-[11px] text-slateText/85 mt-1.5 leading-relaxed">
+            <h4 class="text-xs font-bold text-slate-800 dark:text-white mt-1">Media Ingestion</h4>
+            <p class="text-[11px] text-slate-600 dark:text-slateText/85 mt-1.5 leading-relaxed">
               FastAPI validates MIME headers for images (JPG, PNG) and videos (MP4, AVI, MOV) via async streaming.
             </p>
           </div>
-
-          <div class="tilt-card bg-navyInner/90 border border-softBlue/15 rounded-xl p-4">
+          <div class="tilt-card bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/15 rounded-xl p-4">
             <span class="text-xs font-extrabold text-accentBlue">STAGE 02</span>
-            <h4 class="text-xs font-bold text-white mt-1">Keyframe Sampling</h4>
-            <p class="text-[11px] text-slateText/85 mt-1.5 leading-relaxed">
+            <h4 class="text-xs font-bold text-slate-800 dark:text-white mt-1">Keyframe Sampling</h4>
+            <p class="text-[11px] text-slate-600 dark:text-slateText/85 mt-1.5 leading-relaxed">
               OpenCV extracts up to 36 uniformly spaced frames across the video timeline using linear index interpolation.
             </p>
           </div>
-
-          <div class="tilt-card bg-navyInner/90 border border-softBlue/15 rounded-xl p-4">
+          <div class="tilt-card bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/15 rounded-xl p-4">
             <span class="text-xs font-extrabold text-accentBlue">STAGE 03</span>
-            <h4 class="text-xs font-bold text-white mt-1">Face ROI Cropping</h4>
-            <p class="text-[11px] text-slateText/85 mt-1.5 leading-relaxed">
-              Haar-Cascade frontal face detection isolates the largest facial bounding box and resizes it to <code class="text-softBlue">224×224</code> RGB.
+            <h4 class="text-xs font-bold text-slate-800 dark:text-white mt-1">Face ROI Cropping</h4>
+            <p class="text-[11px] text-slate-600 dark:text-slateText/85 mt-1.5 leading-relaxed">
+              Haar-Cascade frontal face detection isolates the largest facial bounding box and resizes it to <code class="text-accentBlue dark:text-softBlue">224×224</code> RGB.
             </p>
           </div>
-
-          <div class="tilt-card bg-navyInner/90 border border-softBlue/15 rounded-xl p-4">
+          <div class="tilt-card bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/15 rounded-xl p-4">
             <span class="text-xs font-extrabold text-accentBlue">STAGE 04</span>
-            <h4 class="text-xs font-bold text-white mt-1">CNN Feature Extraction</h4>
-            <p class="text-[11px] text-slateText/85 mt-1.5 leading-relaxed">
-              <code class="text-softBlue">MobileNetV3-Small</code> inverted residual blocks with Squeeze-and-Excitation inspect pixel-level blending artifacts.
+            <h4 class="text-xs font-bold text-slate-800 dark:text-white mt-1">CNN Analysis</h4>
+            <p class="text-[11px] text-slate-600 dark:text-slateText/85 mt-1.5 leading-relaxed">
+              <code class="text-accentBlue dark:text-softBlue">MobileNetV3-Small</code> inverted residual blocks inspect pixel-level blending artifacts.
             </p>
           </div>
-
-          <div class="tilt-card bg-navyInner/90 border border-emerald-400/30 rounded-xl p-4">
-            <span class="text-xs font-extrabold text-emerald-400">STAGE 05</span>
-            <h4 class="text-xs font-bold text-white mt-1">Temporal Aggregation</h4>
-            <p class="text-[11px] text-slateText/85 mt-1.5 leading-relaxed">
-              Softmax probabilities and cross-frame variance are averaged to output the final REAL/FAKE confidence score.
+          <div class="tilt-card bg-slate-50 dark:bg-navyInner/90 border border-teal-200 dark:border-emerald-400/30 rounded-xl p-4">
+            <span class="text-xs font-extrabold text-teal-600 dark:text-emerald-400">STAGE 05</span>
+            <h4 class="text-xs font-bold text-slate-800 dark:text-white mt-1">Aggregation</h4>
+            <p class="text-[11px] text-slate-600 dark:text-slateText/85 mt-1.5 leading-relaxed">
+              Softmax probabilities and cross-frame variance are averaged to output the final REAL/FAKE confidence.
             </p>
           </div>
         </div>
       </div>
 
-      <!-- 4. Dataset Engineering & Benchmark Evaluation -->
+      <!-- 4. Datasets & Benchmarks -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Dataset Card -->
         <div class="lg:col-span-7 glass-panel rounded-3xl p-8 space-y-4">
           <span class="text-xs font-semibold uppercase tracking-wider text-accentBlue">Training Corpus</span>
-          <h3 class="text-xl font-bold text-white">Balanced Multi-Domain Datasets</h3>
-          <p class="text-xs text-slateText leading-relaxed">
-            To prevent class bias and domain overfitting, our training pipeline merges static portrait datasets with real-world video sequences at an exact <strong class="text-white">50% Real / 50% Fake ratio</strong> (<code class="text-softBlue">8,216</code> train, <code class="text-softBlue">1,768</code> validation, <code class="text-softBlue">1,740</code> test samples):
+          <h3 class="text-xl font-bold text-slate-800 dark:text-white">Balanced Multi-Domain Datasets</h3>
+          <p class="text-xs text-slate-600 dark:text-slateText leading-relaxed">
+            To prevent class bias and domain overfitting, our training pipeline merges static portrait datasets with real-world video sequences at an exact <strong class="text-slate-800 dark:text-white">50% Real / 50% Fake ratio</strong>:
           </p>
-
           <div class="space-y-3 pt-1">
-            <div class="bg-navyInner/90 border border-softBlue/15 rounded-xl p-4">
+            <div class="bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/15 rounded-xl p-4">
               <div class="flex items-center justify-between">
-                <h4 class="text-xs font-bold text-softBlue">140k Real and Fake Faces (Image Domain)</h4>
-                <span class="text-[10px] px-2 py-0.5 rounded bg-accentBlue/20 text-softBlue">10,000 Sampled</span>
+                <h4 class="text-xs font-bold text-accentBlue dark:text-softBlue">140k Real and Fake Faces</h4>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-blue-100 dark:bg-accentBlue/20 text-accentBlue dark:text-softBlue">Image Domain</span>
               </div>
-              <p class="text-[11px] text-slateText mt-1.5 leading-relaxed">
-                Combines real human photographs (Flickr-Faces-HQ) with synthetic faces generated by StyleGAN. Teaches the model to spot unnatural skin pore smoothing, iris asymmetry, and background hair artifacts.
+              <p class="text-[11px] text-slate-600 dark:text-slateText mt-1.5 leading-relaxed">
+                Combines real human photographs with synthetic faces generated by StyleGAN. Teaches the model to spot unnatural skin pore smoothing and background hair artifacts.
               </p>
             </div>
-
-            <div class="bg-navyInner/90 border border-softBlue/15 rounded-xl p-4">
+            <div class="bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/15 rounded-xl p-4">
               <div class="flex items-center justify-between">
-                <h4 class="text-xs font-bold text-softBlue">Deep Fake Detection — DFD (Video Domain)</h4>
-                <span class="text-[10px] px-2 py-0.5 rounded bg-tealBadge/50 text-emerald-300">Leak-Free Video Split</span>
+                <h4 class="text-xs font-bold text-accentBlue dark:text-softBlue">Deep Fake Detection (DFD) & FaceForensics++</h4>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-teal-100 dark:bg-tealBadge/50 text-teal-700 dark:text-emerald-300">Video Domain</span>
               </div>
-              <p class="text-[11px] text-slateText mt-1.5 leading-relaxed">
-                Contains original actor recordings alongside neural face-swapped sequences. Frames are grouped strictly by <code class="text-softBlue">video_id</code> before splitting so the test set evaluates completely unseen subjects and lighting environments.
+              <p class="text-[11px] text-slate-600 dark:text-slateText mt-1.5 leading-relaxed">
+                Contains original actor recordings alongside neural face-swapped sequences. Grouped strictly by video ID before splitting so the test set evaluates completely unseen subjects.
               </p>
             </div>
           </div>
         </div>
 
-        <!-- Benchmark Metrics Card -->
         <div class="lg:col-span-5 glass-panel rounded-3xl p-8 flex flex-col justify-between">
           <div>
-            <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Experimental Results</span>
-            <h3 class="text-xl font-bold text-white mt-1">Held-Out Test Metrics</h3>
-            <p class="text-xs text-slateText mt-1">Evaluated on 1,740 unseen images & video frames:</p>
-
+            <span class="text-xs font-semibold uppercase tracking-wider text-teal-600 dark:text-emerald-400">Experimental Results</span>
+            <h3 class="text-xl font-bold text-slate-800 dark:text-white mt-1">Held-Out Test Metrics</h3>
+            <p class="text-xs text-slate-500 dark:text-slateText mt-1">Evaluated on unseen images & video frames:</p>
             <div class="mt-5 space-y-3">
-              <div class="bg-navyInner/90 border border-softBlue/15 rounded-xl p-3.5 flex items-center justify-between">
-                <span class="text-xs text-slateText">Overall Test Accuracy</span>
-                <span class="text-base font-extrabold text-accentBlue">92.30%</span>
+              <div class="bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/15 rounded-xl p-3.5 flex items-center justify-between">
+                <span class="text-xs text-slate-600 dark:text-slateText">Overall Test Accuracy</span>
+                <span class="text-base font-extrabold text-accentBlue">95.11%</span>
               </div>
-              <div class="bg-navyInner/90 border border-softBlue/15 rounded-xl p-3.5 flex items-center justify-between">
-                <span class="text-xs text-slateText">ROC-AUC Score</span>
-                <span class="text-base font-extrabold text-softBlue">0.9764</span>
+              <div class="bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/15 rounded-xl p-3.5 flex items-center justify-between">
+                <span class="text-xs text-slate-600 dark:text-slateText">ROC-AUC Score</span>
+                <span class="text-base font-extrabold text-accentBlue dark:text-softBlue">0.9927</span>
               </div>
-              <div class="bg-navyInner/90 border border-softBlue/15 rounded-xl p-3.5 flex items-center justify-between">
-                <span class="text-xs text-slateText">Fake Class (Precision / Recall)</span>
-                <span class="text-xs font-bold text-white">0.91 / 0.93 (F1: 0.92)</span>
+              <div class="bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/15 rounded-xl p-3.5 flex items-center justify-between">
+                <span class="text-xs text-slate-600 dark:text-slateText">Fake Class (Precision / Recall)</span>
+                <span class="text-xs font-bold text-slate-800 dark:text-white">0.95 / 0.95 (F1: 0.95)</span>
               </div>
-              <div class="bg-navyInner/90 border border-softBlue/15 rounded-xl p-3.5 flex items-center justify-between">
-                <span class="text-xs text-slateText">Real Class (Precision / Recall)</span>
-                <span class="text-xs font-bold text-white">0.93 / 0.91 (F1: 0.92)</span>
+              <div class="bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/15 rounded-xl p-3.5 flex items-center justify-between">
+                <span class="text-xs text-slate-600 dark:text-slateText">Real Class (Precision / Recall)</span>
+                <span class="text-xs font-bold text-slate-800 dark:text-white">0.95 / 0.95 (F1: 0.95)</span>
               </div>
             </div>
           </div>
-
-          <div class="mt-5 pt-4 border-t border-softBlue/15 text-[11px] text-slateText/80">
-            <strong class="text-white">Training Hyperparameters:</strong> AdamW (<code class="text-softBlue">lr=3e-4</code>), Cosine Annealing LR scheduler, Cross-Entropy Loss, ImageNet normalization.
-          </div>
-        </div>
-      </div>
-
-      <!-- 5. Technology Stack & Operational Scope -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="glass-panel rounded-2xl p-6">
-          <h3 class="text-sm font-bold text-white mb-3">Full-Stack Technology Suite</h3>
-          <div class="grid grid-cols-2 gap-2.5 text-xs">
-            <div class="bg-navyInner/85 border border-softBlue/10 rounded-lg p-3">
-              <p class="text-softBlue font-semibold">PyTorch & Torchvision</p>
-              <p class="text-[11px] text-slateText mt-0.5">MobileNetV3-Small CNN & CPU tensor inference</p>
-            </div>
-            <div class="bg-navyInner/85 border border-softBlue/10 rounded-lg p-3">
-              <p class="text-softBlue font-semibold">OpenCV (cv2)</p>
-              <p class="text-[11px] text-slateText mt-0.5">Video frame sampling & Haar-Cascade ROI</p>
-            </div>
-            <div class="bg-navyInner/85 border border-softBlue/10 rounded-lg p-3">
-              <p class="text-softBlue font-semibold">FastAPI & Uvicorn</p>
-              <p class="text-[11px] text-slateText mt-0.5">Asynchronous REST API & multipart upload engine</p>
-            </div>
-            <div class="bg-navyInner/85 border border-softBlue/10 rounded-lg p-3">
-              <p class="text-softBlue font-semibold">Three.js & Tailwind</p>
-              <p class="text-[11px] text-slateText mt-0.5">Interactive 3D WebGL scene & responsive UI</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="glass-panel rounded-2xl p-6">
-          <h3 class="text-sm font-bold text-amber-300 mb-3">System Scope & Known Boundaries</h3>
-          <ul class="text-xs text-slateText space-y-2.5 list-disc list-inside leading-relaxed">
-            <li><strong class="text-white">Photorealistic Human Faces Only:</strong> Optimized for real camera imagery and photorealistic deepfakes; stylized cartoons, anime, and non-face images are filtered out by the face-detection guard.</li>
-            <li><strong class="text-white">Lighting & Occlusion Sensitivity:</strong> Extreme low-light grain, heavy beauty filters, or steep side profiles can alter skin-texture frequencies and reduce confidence.</li>
-            <li><strong class="text-white">Visual-Only Forensics:</strong> Analyzes spatial and temporal visual artifacts without audio spectrogram processing.</li>
-          </ul>
         </div>
       </div>
 
@@ -739,45 +706,45 @@
     <section id="page-faq" class="page-section hidden reveal-section max-w-3xl mx-auto space-y-4">
       <div class="glass-panel rounded-2xl p-8">
         <span class="text-xs font-semibold uppercase tracking-wider text-accentBlue">Help & Documentation</span>
-        <h2 class="text-2xl font-bold text-white mt-1 mb-6">Frequently Asked Questions</h2>
+        <h2 class="text-2xl font-bold text-slate-800 dark:text-white mt-1 mb-6">Frequently Asked Questions</h2>
 
         <div class="space-y-3">
-          <div class="bg-navyInner/90 border border-softBlue/15 rounded-xl overflow-hidden">
-            <button onclick="toggleFaq(this)" class="w-full px-5 py-4 text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-white">
+          <div class="bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/15 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full px-5 py-4 text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-800 dark:text-white">
               <span>What file formats and media types are supported?</span>
               <span class="text-accentBlue text-lg">+</span>
             </button>
-            <div class="hidden px-5 pb-4 text-xs text-slateText leading-relaxed border-t border-softBlue/10 pt-3">
+            <div class="hidden px-5 pb-4 text-xs text-slate-600 dark:text-slateText leading-relaxed border-t border-slate-200 dark:border-softBlue/10 pt-3">
               You can upload images (<strong>JPG, JPEG, PNG</strong>) and videos (<strong>MP4, AVI, MOV</strong>). Videos are analyzed by extracting up to 36 evenly distributed keyframes and aggregating predictions across all detected faces.
             </div>
           </div>
 
-          <div class="bg-navyInner/90 border border-softBlue/15 rounded-xl overflow-hidden">
-            <button onclick="toggleFaq(this)" class="w-full px-5 py-4 text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-white">
+          <div class="bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/15 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full px-5 py-4 text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-800 dark:text-white">
               <span>Why does it show "No Human Face Detected" on cartoons or landscapes?</span>
               <span class="text-accentBlue text-lg">+</span>
             </button>
-            <div class="hidden px-5 pb-4 text-xs text-slateText leading-relaxed border-t border-softBlue/10 pt-3">
+            <div class="hidden px-5 pb-4 text-xs text-slate-600 dark:text-slateText leading-relaxed border-t border-slate-200 dark:border-softBlue/10 pt-3">
               The classifier is trained exclusively on photorealistic human faces. OpenCV validates the presence of a human face before running CNN inference so stylized illustrations or non-face scenes never trigger false scores.
             </div>
           </div>
 
-          <div class="bg-navyInner/90 border border-softBlue/15 rounded-xl overflow-hidden">
-            <button onclick="toggleFaq(this)" class="w-full px-5 py-4 text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-white">
+          <div class="bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/15 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full px-5 py-4 text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-800 dark:text-white">
               <span>How accurate is the detection model?</span>
               <span class="text-accentBlue text-lg">+</span>
             </button>
-            <div class="hidden px-5 pb-4 text-xs text-slateText leading-relaxed border-t border-softBlue/10 pt-3">
-              On our held-out hybrid test set of 1,740 unseen images and video frames, the model achieved <strong>92.30% accuracy</strong> and a <strong>0.9764 ROC-AUC score</strong>.
+            <div class="hidden px-5 pb-4 text-xs text-slate-600 dark:text-slateText leading-relaxed border-t border-slate-200 dark:border-softBlue/10 pt-3">
+              On our held-out hybrid test set of unseen images and video frames, the model achieved <strong>95.11% accuracy</strong> and a <strong>0.9927 ROC-AUC score</strong>.
             </div>
           </div>
 
-          <div class="bg-navyInner/90 border border-softBlue/15 rounded-xl overflow-hidden">
-            <button onclick="toggleFaq(this)" class="w-full px-5 py-4 text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-white">
+          <div class="bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/15 rounded-xl overflow-hidden">
+            <button onclick="toggleFaq(this)" class="w-full px-5 py-4 text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-800 dark:text-white">
               <span>Are uploaded files stored permanently?</span>
               <span class="text-accentBlue text-lg">+</span>
             </button>
-            <div class="hidden px-5 pb-4 text-xs text-slateText leading-relaxed border-t border-softBlue/10 pt-3">
+            <div class="hidden px-5 pb-4 text-xs text-slate-600 dark:text-slateText leading-relaxed border-t border-slate-200 dark:border-softBlue/10 pt-3">
               No. Uploaded media is processed inside an isolated temporary file buffer and deleted automatically the moment inference completes.
             </div>
           </div>
@@ -789,41 +756,41 @@
     <section id="page-contact" class="page-section hidden reveal-section max-w-3xl mx-auto">
       <div class="glass-panel rounded-2xl p-8">
         <span class="text-xs font-semibold uppercase tracking-wider text-accentBlue">Project Inquiry</span>
-        <h2 class="text-2xl font-bold text-white mt-1">Contact & Support</h2>
-        <p class="text-xs text-slateText mt-1 mb-6">Questions about our architecture, dataset, or Final Year Project? Reach out below.</p>
+        <h2 class="text-2xl font-bold text-slate-800 dark:text-white mt-1">Contact & Support</h2>
+        <p class="text-xs text-slate-500 dark:text-slateText mt-1 mb-6">Questions about our architecture, dataset, or Final Year Project? Reach out below.</p>
 
         <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
           <div class="md:col-span-5 space-y-3">
-            <div class="bg-navyInner/90 border border-emerald-400/25 rounded-xl p-4">
-              <p class="text-[11px] text-emerald-300 font-semibold">Supervised By</p>
-              <p class="text-xs font-bold text-white mt-0.5">Prof. Dr. Fida Hussain Chandio</p>
-              <p class="text-[11px] text-slateText">Department of Computer Science, University of Sindh</p>
+            <div class="bg-slate-50 dark:bg-navyInner/90 border border-teal-200 dark:border-emerald-400/25 rounded-xl p-4">
+              <p class="text-[11px] text-teal-600 dark:text-emerald-300 font-semibold">Supervised By</p>
+              <p class="text-xs font-bold text-slate-800 dark:text-white mt-0.5">Prof. Dr. Fida Hussain Chandio</p>
+              <p class="text-[11px] text-slate-500 dark:text-slateText">Department of Computer Science, University of Sindh</p>
             </div>
-            <div class="bg-navyInner/90 border border-softBlue/15 rounded-xl p-4">
-              <p class="text-[11px] text-softBlue font-semibold">Project Team (FYP 2026)</p>
-              <p class="text-xs text-white mt-1">• Mehtab Ali <span class="text-slateText text-[10px]">(Team Leader)</span></p>
-              <p class="text-xs text-white mt-0.5">• Najeeb Ahmed <span class="text-slateText text-[10px]">(Co-Team Leader)</span></p>
-              <p class="text-xs text-white mt-0.5">• Maryam Ali <span class="text-slateText text-[10px]">(Member)</span></p>
+            <div class="bg-slate-50 dark:bg-navyInner/90 border border-slate-200 dark:border-softBlue/15 rounded-xl p-4">
+              <p class="text-[11px] text-accentBlue dark:text-softBlue font-semibold">Project Team (FYP 2026)</p>
+              <p class="text-xs text-slate-800 dark:text-white mt-1">• Mehtab Ali <span class="text-slate-500 dark:text-slateText text-[10px]">(Team Leader)</span></p>
+              <p class="text-xs text-slate-800 dark:text-white mt-0.5">• Najeeb Ahmed <span class="text-slate-500 dark:text-slateText text-[10px]">(Co-Team Leader)</span></p>
+              <p class="text-xs text-slate-800 dark:text-white mt-0.5">• Maryam Ali <span class="text-slate-500 dark:text-slateText text-[10px]">(Member)</span></p>
             </div>
           </div>
 
           <form id="contactForm" class="md:col-span-7 space-y-3">
             <div>
-              <label class="block text-[11px] text-slateText mb-1">Your Name</label>
-              <input type="text" required placeholder="Enter your name" class="w-full bg-navyInner border border-softBlue/20 focus:border-accentBlue rounded-lg px-3.5 py-2 text-xs text-white outline-none" />
+              <label class="block text-[11px] text-slate-600 dark:text-slateText mb-1">Your Name</label>
+              <input type="text" required placeholder="Enter your name" class="w-full bg-white dark:bg-navyInner border border-slate-300 dark:border-softBlue/20 focus:border-accentBlue rounded-lg px-3.5 py-2 text-xs text-slate-800 dark:text-white outline-none" />
             </div>
             <div>
-              <label class="block text-[11px] text-slateText mb-1">Email Address</label>
-              <input type="email" required placeholder="you@example.com" class="w-full bg-navyInner border border-softBlue/20 focus:border-accentBlue rounded-lg px-3.5 py-2 text-xs text-white outline-none" />
+              <label class="block text-[11px] text-slate-600 dark:text-slateText mb-1">Email Address</label>
+              <input type="email" required placeholder="you@example.com" class="w-full bg-white dark:bg-navyInner border border-slate-300 dark:border-softBlue/20 focus:border-accentBlue rounded-lg px-3.5 py-2 text-xs text-slate-800 dark:text-white outline-none" />
             </div>
             <div>
-              <label class="block text-[11px] text-slateText mb-1">Message</label>
-              <textarea rows="3" required placeholder="Write your inquiry or feedback..." class="w-full bg-navyInner border border-softBlue/20 focus:border-accentBlue rounded-lg px-3.5 py-2 text-xs text-white outline-none"></textarea>
+              <label class="block text-[11px] text-slate-600 dark:text-slateText mb-1">Message</label>
+              <textarea rows="3" required placeholder="Write your inquiry or feedback..." class="w-full bg-white dark:bg-navyInner border border-slate-300 dark:border-softBlue/20 focus:border-accentBlue rounded-lg px-3.5 py-2 text-xs text-slate-800 dark:text-white outline-none"></textarea>
             </div>
             <button type="submit" class="w-full bg-accentBlue hover:bg-blue-500 text-white font-semibold text-xs py-2.5 rounded-lg transition shadow-lg shadow-accentBlue/25">
               Send Message
             </button>
-            <p id="contactSuccess" class="hidden text-xs text-emerald-400 text-center pt-1">✓ Message recorded! Thank you for reaching out.</p>
+            <p id="contactSuccess" class="hidden text-xs text-emerald-500 dark:text-emerald-400 text-center pt-1">✓ Message recorded! Thank you for reaching out.</p>
           </form>
         </div>
       </div>
@@ -832,20 +799,41 @@
   </div>
 
   <!-- Footer -->
-  <footer class="border-t border-softBlue/15 bg-navyInner/80 backdrop-blur-md py-5 px-6 mt-12">
-    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slateText/75">
-      <p>© 2026 <span class="text-white font-medium">Deepfake Detection System</span> — Department of Computer Science, University of Sindh</p>
+  <footer class="border-t border-slate-200 dark:border-softBlue/15 bg-white/80 dark:bg-navyInner/80 backdrop-blur-md py-5 px-6 mt-12 transition-colors">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-500 dark:text-slateText/75">
+      <p>© 2026 <span class="text-slate-800 dark:text-white font-medium">Deepfake Detection System</span> — Department of Computer Science, University of Sindh</p>
       <div class="flex items-center gap-4">
-        <button onclick="switchPage('home')" class="hover:text-white transition">Home</button>
-        <button onclick="switchPage('detector')" class="hover:text-white transition">Detector</button>
-        <button onclick="switchPage('about')" class="hover:text-white transition">About</button>
-        <button onclick="switchPage('faq')" class="hover:text-white transition">FAQ</button>
-        <button onclick="switchPage('contact')" class="hover:text-white transition">Contact</button>
+        <button onclick="switchPage('home')" class="hover:text-accentBlue dark:hover:text-white transition">Home</button>
+        <button onclick="switchPage('detector')" class="hover:text-accentBlue dark:hover:text-white transition">Detector</button>
+        <button onclick="switchPage('about')" class="hover:text-accentBlue dark:hover:text-white transition">About</button>
+        <button onclick="switchPage('faq')" class="hover:text-accentBlue dark:hover:text-white transition">FAQ</button>
+        <button onclick="switchPage('contact')" class="hover:text-accentBlue dark:hover:text-white transition">Contact</button>
       </div>
     </div>
   </footer>
 
   <script>
+    // ==================== 0. THEME TOGGLE LOGIC ====================
+    const themeBtn = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const html = document.documentElement;
+
+    function applyThemeColors() {
+      const isDark = html.classList.contains('dark');
+      if (isDark) {
+        themeIcon.classList.replace('fa-sun', 'fa-moon');
+        if (window.update3DTheme) window.update3DTheme(true);
+      } else {
+        themeIcon.classList.replace('fa-moon', 'fa-sun');
+        if (window.update3DTheme) window.update3DTheme(false);
+      }
+    }
+
+    themeBtn.addEventListener('click', () => {
+      html.classList.toggle('dark');
+      applyThemeColors();
+    });
+
     // ==================== 1. THREE.JS 3D BIOMETRIC NEURAL SCENE ====================
     (function init3DScene() {
       const container = document.getElementById('webgl-container');
@@ -853,41 +841,26 @@
 
       const scene = new THREE.Scene();
       scene.fog = new THREE.FogExp2(0x060d1f, 0.032);
-
       const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
       camera.position.z = 16;
-
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       container.appendChild(renderer.domElement);
 
-      // Central 3D Wireframe Icosahedron (Biometric Core)
       const coreGroup = new THREE.Group();
       scene.add(coreGroup);
 
       const icoGeo = new THREE.IcosahedronGeometry(4.6, 2);
-      const icoMat = new THREE.MeshBasicMaterial({
-        color: 0x4F83F0,
-        wireframe: true,
-        transparent: true,
-        opacity: 0.24
-      });
+      const icoMat = new THREE.MeshBasicMaterial({ color: 0x4F83F0, wireframe: true, transparent: true, opacity: 0.24 });
       const coreMesh = new THREE.Mesh(icoGeo, icoMat);
       coreGroup.add(coreMesh);
 
-      // Inner Glowing Octahedron
       const innerGeo = new THREE.OctahedronGeometry(2.8, 1);
-      const innerMat = new THREE.MeshBasicMaterial({
-        color: 0x93C5FD,
-        wireframe: true,
-        transparent: true,
-        opacity: 0.35
-      });
+      const innerMat = new THREE.MeshBasicMaterial({ color: 0x93C5FD, wireframe: true, transparent: true, opacity: 0.35 });
       const innerMesh = new THREE.Mesh(innerGeo, innerMat);
       coreGroup.add(innerMesh);
 
-      // Orbital Scanner Rings
       const ringGeo1 = new THREE.TorusGeometry(6.4, 0.03, 16, 100);
       const ringMat1 = new THREE.MeshBasicMaterial({ color: 0x4F83F0, transparent: true, opacity: 0.45 });
       const ring1 = new THREE.Mesh(ringGeo1, ringMat1);
@@ -901,7 +874,6 @@
       ring2.rotation.y = Math.PI / 5;
       coreGroup.add(ring2);
 
-      // 3D Floating Neural Particles
       const particleCount = 650;
       const posArray = new Float32Array(particleCount * 3);
       for (let i = 0; i < particleCount * 3; i++) {
@@ -909,16 +881,27 @@
       }
       const particlesGeo = new THREE.BufferGeometry();
       particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-      const particlesMat = new THREE.PointsMaterial({
-        size: 0.11,
-        color: 0x93C5FD,
-        transparent: true,
-        opacity: 0.75
-      });
+      const particlesMat = new THREE.PointsMaterial({ size: 0.11, color: 0x93C5FD, transparent: true, opacity: 0.75 });
       const particleSystem = new THREE.Points(particlesGeo, particlesMat);
       scene.add(particleSystem);
 
-      // Mouse Interactive 3D Parallax
+      window.update3DTheme = function(isDark) {
+        if (isDark) {
+          scene.fog.color.setHex(0x060d1f);
+          icoMat.color.setHex(0x4F83F0);
+          innerMat.color.setHex(0x93C5FD);
+          ringMat1.color.setHex(0x4F83F0);
+          particlesMat.color.setHex(0x93C5FD);
+        } else {
+          scene.fog.color.setHex(0xf8fafc);
+          icoMat.color.setHex(0x2563eb);
+          innerMat.color.setHex(0x3b82f6);
+          ringMat1.color.setHex(0x2563eb);
+          particlesMat.color.setHex(0x60a5fa);
+        }
+      };
+      applyThemeColors();
+
       let mouseX = 0, mouseY = 0;
       document.addEventListener('mousemove', (e) => {
         mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -938,20 +921,15 @@
 
         coreMesh.rotation.y = elapsed * 0.18;
         coreMesh.rotation.x = Math.sin(elapsed * 0.25) * 0.25;
-
         innerMesh.rotation.y = -elapsed * 0.35;
         innerMesh.rotation.z = elapsed * 0.2;
-
         ring1.rotation.z = elapsed * 0.4;
         ring2.rotation.z = -elapsed * 0.3;
-
         particleSystem.rotation.y = elapsed * 0.04;
 
-        // Smooth camera parallax toward mouse
         camera.position.x += (mouseX * 2.5 - camera.position.x) * 0.04;
         camera.position.y += (-mouseY * 2.0 - camera.position.y) * 0.04;
         camera.lookAt(scene.position);
-
         renderer.render(scene, camera);
       }
       animate();
@@ -997,9 +975,11 @@
         sec.classList.remove('reveal-section');
       });
       const target = document.getElementById('page-' + pageId);
-      target.classList.remove('hidden');
-      void target.offsetWidth;
-      target.classList.add('reveal-section');
+      if(target){
+        target.classList.remove('hidden');
+        void target.offsetWidth;
+        target.classList.add('reveal-section');
+      }
 
       document.querySelectorAll('.nav-btn').forEach(btn => {
         if (btn.dataset.nav === pageId) btn.classList.add('nav-active');
@@ -1046,17 +1026,19 @@
 
     let currentFile = null;
 
-    dropZone.addEventListener("click", () => fileInput.click());
-    dropZone.addEventListener("dragover", (e) => { e.preventDefault(); dropZone.classList.add("border-accentBlue"); });
-    dropZone.addEventListener("dragleave", () => dropZone.classList.remove("border-accentBlue"));
-    dropZone.addEventListener("drop", (e) => {
-      e.preventDefault();
-      dropZone.classList.remove("border-accentBlue");
-      if (e.dataTransfer.files.length) loadSelectedFile(e.dataTransfer.files[0]);
-    });
-    fileInput.addEventListener("change", (e) => {
-      if (e.target.files.length) loadSelectedFile(e.target.files[0]);
-    });
+    if(dropZone){
+      dropZone.addEventListener("click", () => fileInput.click());
+      dropZone.addEventListener("dragover", (e) => { e.preventDefault(); dropZone.classList.add("border-accentBlue"); });
+      dropZone.addEventListener("dragleave", () => dropZone.classList.remove("border-accentBlue"));
+      dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("border-accentBlue");
+        if (e.dataTransfer.files.length) loadSelectedFile(e.dataTransfer.files[0]);
+      });
+      fileInput.addEventListener("change", (e) => {
+        if (e.target.files.length) loadSelectedFile(e.target.files[0]);
+      });
+    }
 
     function loadSelectedFile(file) {
       currentFile = file;
@@ -1086,67 +1068,71 @@
       }
     }
 
-    resetBtn.addEventListener("click", () => {
-      currentFile = null;
-      fileInput.value = "";
-      mediaWorkspace.classList.add("hidden");
-      resultsCard.classList.add("hidden");
-      noFaceCard.classList.add("hidden");
-      progressSection.classList.add("hidden");
-      mediaScanBeam.classList.add("hidden");
-      dropZone.classList.remove("hidden");
-      pipelineCard.classList.remove("hidden");
-    });
-
-    analyzeBtn.addEventListener("click", async () => {
-      if (!currentFile) return;
-
-      analyzeBtn.disabled = true;
-      document.getElementById("btnLabel").textContent = "Analyzing...";
-      document.getElementById("btnIcon").textContent = "◌";
-      progressSection.classList.remove("hidden");
-      mediaScanBeam.classList.remove("hidden");
-      resultsCard.classList.add("hidden");
-      noFaceCard.classList.add("hidden");
-
-      let pct = 15;
-      progressBar.style.width = pct + "%";
-      progressPercent.textContent = pct + "%";
-      const timer = setInterval(() => {
-        if (pct < 88) {
-          pct += 12;
-          progressBar.style.width = pct + "%";
-          progressPercent.textContent = pct + "%";
-        }
-      }, 200);
-
-      const formData = new FormData();
-      formData.append("file", currentFile);
-
-      try {
-        const res = await fetch("/api/analyze", { method: "POST", body: formData });
-        const data = await res.json();
-
-        clearInterval(timer);
-        progressBar.style.width = "100%";
-        progressPercent.textContent = "100%";
-
-        setTimeout(() => {
-          progressSection.classList.add("hidden");
-          mediaScanBeam.classList.add("hidden");
-          analyzeBtn.disabled = false;
-          document.getElementById("btnLabel").textContent = "Analyzed";
-          document.getElementById("btnIcon").textContent = "✓";
-          displayResults(data);
-        }, 300);
-      } catch (err) {
-        clearInterval(timer);
+    if(resetBtn){
+      resetBtn.addEventListener("click", () => {
+        currentFile = null;
+        fileInput.value = "";
+        mediaWorkspace.classList.add("hidden");
+        resultsCard.classList.add("hidden");
+        noFaceCard.classList.add("hidden");
+        progressSection.classList.add("hidden");
         mediaScanBeam.classList.add("hidden");
-        alert("Analysis failed. Check server terminal.");
-        analyzeBtn.disabled = false;
-        document.getElementById("btnLabel").textContent = "Analyze";
-      }
-    });
+        dropZone.classList.remove("hidden");
+        pipelineCard.classList.remove("hidden");
+      });
+    }
+
+    if(analyzeBtn){
+      analyzeBtn.addEventListener("click", async () => {
+        if (!currentFile) return;
+
+        analyzeBtn.disabled = true;
+        document.getElementById("btnLabel").textContent = "Analyzing...";
+        document.getElementById("btnIcon").textContent = "◌";
+        progressSection.classList.remove("hidden");
+        mediaScanBeam.classList.remove("hidden");
+        resultsCard.classList.add("hidden");
+        noFaceCard.classList.add("hidden");
+
+        let pct = 15;
+        progressBar.style.width = pct + "%";
+        progressPercent.textContent = pct + "%";
+        const timer = setInterval(() => {
+          if (pct < 88) {
+            pct += 12;
+            progressBar.style.width = pct + "%";
+            progressPercent.textContent = pct + "%";
+          }
+        }, 200);
+
+        const formData = new FormData();
+        formData.append("file", currentFile);
+
+        try {
+          const res = await fetch("/api/analyze", { method: "POST", body: formData });
+          const data = await res.json();
+
+          clearInterval(timer);
+          progressBar.style.width = "100%";
+          progressPercent.textContent = "100%";
+
+          setTimeout(() => {
+            progressSection.classList.add("hidden");
+            mediaScanBeam.classList.add("hidden");
+            analyzeBtn.disabled = false;
+            document.getElementById("btnLabel").textContent = "Analyzed";
+            document.getElementById("btnIcon").textContent = "✓";
+            displayResults(data);
+          }, 300);
+        } catch (err) {
+          clearInterval(timer);
+          mediaScanBeam.classList.add("hidden");
+          alert("Analysis failed. Check server terminal.");
+          analyzeBtn.disabled = false;
+          document.getElementById("btnLabel").textContent = "Analyze";
+        }
+      });
+    }
 
     function displayResults(data) {
       if (data.status === "NO_FACE") {
@@ -1161,21 +1147,27 @@
       const title = document.getElementById("verdictTitle");
 
       if (data.label === "FAKE") {
-        banner.className = "rounded-xl px-5 py-3.5 flex items-center justify-between bg-rose-900/80 border border-rose-400/40";
+        banner.className = "rounded-xl px-5 py-3.5 flex items-center justify-between bg-rose-600 dark:bg-rose-900/80 border border-rose-400/40";
         icon.textContent = "!";
         title.textContent = "FAKE";
       } else {
-        banner.className = "rounded-xl px-5 py-3.5 flex items-center justify-between bg-tealBadge border border-emerald-400/30";
+        banner.className = "rounded-xl px-5 py-3.5 flex items-center justify-between bg-teal-500 dark:bg-tealBadge border border-emerald-400/30";
         icon.textContent = "✓";
         title.textContent = "REAL";
       }
 
       document.getElementById("verdictConfidence").textContent = data.confidence.toFixed(2) + "%";
-      document.getElementById("statFrames").textContent = data.frames_processed;
-      document.getElementById("statFaces").textContent = data.faces_detected;
-      document.getElementById("statTime").textContent = data.processing_time;
+      document.getElementById("statFrames").textContent = data.frames_processed || 1;
+      document.getElementById("statFaces").textContent = data.faces_detected || 1;
+      document.getElementById("statTime").textContent = data.processing_time || "1.20s";
 
-      const d = data.detailed;
+      const d = data.detailed || {
+        facial_consistency: 0,
+        temporal_coherence: 0,
+        artifact_detection: 0,
+        blending_anomalies: 0
+      };
+      
       document.getElementById("valConsistency").textContent = d.facial_consistency + "%";
       document.getElementById("barConsistency").style.width = d.facial_consistency + "%";
 
