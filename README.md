@@ -6,7 +6,9 @@
 ![OpenCV](https://img.shields.io/badge/OpenCV-Computer_Vision-5C3EE8?style=for-the-badge&logo=opencv)
 ![Three.js](https://img.shields.io/badge/Three.js-3D_WebGL_UI-black?style=for-the-badge&logo=three.js)
 
-An end-to-end **AI-Powered Media Authenticity Verification System** developed as a Final Year Project at the **Department of Computer Science, University of Sindh**. The system detects synthetic GAN-generated portraits and neural face-swapped videos in real time using a lightweight, CPU-deployable **MobileNetV3-Small** architecture paired with **OpenCV** facial localization and an interactive **3D WebGL** cyber-forensics web interface.
+An end-to-end **AI-Powered Media Authenticity Verification System** developed as a Final Year Project at the **Department of Computer Science, University of Sindh**. 
+
+The system detects synthetic GAN-generated portraits and neural face-swapped videos in real time using a lightweight, CPU-deployable **MobileNetV3-Small** architecture paired with **OpenCV** facial localization and an interactive **3D WebGL** cyber-forensics web interface featuring seamless dark/light mode integration.
 
 ---
 
@@ -19,30 +21,29 @@ An end-to-end **AI-Powered Media Authenticity Verification System** developed as
 | **Co-Team Leader** | **Najeeb Ahmed** | Department of Computer Science, University of Sindh |
 | **Team Member** | **Maryam Ali** | Department of Computer Science, University of Sindh |
 
-
 ---
 
 ## 🎯 Key Features & Highlights
 
-* **Dual-Mode Media Forensics:** Supports both static image formats (`JPG`, `JPEG`, `PNG`) and video sequences (`MP4`, `AVI`, `MOV`).
-* **Automated Facial ROI Localization:** Uses OpenCV's Haar-Cascade frontal face classifier to isolate the primary human face (`224×224` RGB tensor), eliminating background noise and preventing false triggers on non-face media or stylized artwork.
-* **Temporal Keyframe Sampling:** Extracts up to **36 uniformly spaced keyframes** across uploaded videos and computes cross-frame probability variance to detect temporal face-swap flickering.
-* **Lightweight CPU Inference:** Trained on cloud GPUs and compressed into a **~6 MB PyTorch state dictionary** (`best_deepfake_model.pth`), delivering sub-2-second inference on standard CPU laptops without requiring dedicated GPU hardware.
-* **Interactive 3D Cyber-Forensics UI:** Built with Tailwind CSS and Three.js WebGL featuring a rotating 3D biometric neural core, particle field, laser scan overlays, and detailed forensic telemetry bars (*Facial Consistency*, *Temporal Coherence*, *Artifact Detection*, and *Blending Anomalies*).
-* **Zero Data Retention:** Uploaded files are processed inside isolated volatile temporary buffers and automatically purged immediately after inference completes.
+- **Dual-Mode Media Forensics:** Supports both static image formats (`JPG`, `JPEG`, `PNG`) and video sequences (`MP4`, `AVI`, `MOV`).
+- **Automated Facial ROI Localization:** Uses OpenCV's Haar-Cascade frontal face classifier to isolate the primary human face (`224×224` RGB tensor), eliminating background noise and preventing false triggers on non-face media or stylized artwork.
+- **Temporal Keyframe Sampling:** Extracts up to **36 uniformly spaced keyframes** across uploaded videos and computes cross-frame probability variance to detect temporal face-swap flickering.
+- **Lightweight CPU Inference:** Trained on cloud dual-GPUs (Kaggle Tesla T4 x2) and compressed into a **~6 MB PyTorch state dictionary** (`best_deepfake_model.pth`), delivering sub-2-second inference on standard CPU laptops without requiring dedicated GPU hardware.
+- **Interactive 3D Cyber-Forensics UI:** Built with Tailwind CSS and Three.js WebGL featuring a rotating 3D biometric neural core, persistent dark/light mode, laser scan overlays, and detailed forensic telemetry bars (*Facial Consistency*, *Temporal Coherence*, *Artifact Detection*, and *Blending Anomalies*).
+- **Zero Data Retention:** Uploaded files are processed inside isolated volatile temporary buffers and automatically purged immediately after inference completes.
 
 ---
 
 ## 📊 Model Performance & Benchmark Evaluation
 
-Evaluated on a strictly leak-free, held-out hybrid test set of **1,740 unseen images and video frames** (balanced 50% Real / 50% Fake):
+Evaluated on a strictly leak-free, held-out hybrid test set of unseen images and video frames (balanced 50% Real / 50% Fake):
 
 | Metric | Score / Value |
 | :--- | :--- |
-| **Hybrid Test Accuracy** | **92.30%** |
-| **ROC-AUC Score** | **0.9764** |
-| **Fake Class (Precision / Recall / F1)** | `0.91` / `0.93` / `0.92` |
-| **Real Class (Precision / Recall / F1)** | `0.93` / `0.91` / `0.92` |
+| **Hybrid Test Accuracy** | **95.11%** |
+| **ROC-AUC Score** | **0.9927** |
+| **Fake Class (Precision / Recall / F1)** | `0.95` / `0.95` / `0.95` |
+| **Real Class (Precision / Recall / F1)** | `0.95` / `0.95` / `0.95` |
 | **Average CPU Inference Time** | `< 2.0 seconds` |
 
 ---
@@ -69,8 +70,8 @@ Evaluated on a strictly leak-free, held-out hybrid test set of **1,740 unseen im
 ```
 
 ### Training Corpus (Balanced 50/50 Split)
-* **140k Real and Fake Faces (Image Domain):** Combines real human photographs (FFHQ) with StyleGAN synthetic faces to learn high-frequency spatial upsampling artifacts, skin pore smoothing, and iris asymmetry.
-* **Deep Fake Detection — DFD (Video Domain):** Combines original actor recordings with neural face-swapped sequences. Grouped strictly by `video_id` prior to splitting (`8,216` train / `1,768` validation / `1,740` test) to guarantee zero subject or frame leakage.
+- **140k Real and Fake Faces (Image Domain):** Combines real human photographs (FFHQ) with StyleGAN synthetic faces to learn high-frequency spatial upsampling artifacts, skin pore smoothing, and iris asymmetry.
+- **FaceForensics++ C23 & Deep Fake Detection (Video Domain):** Combines a massive 18 GB corpus of original actor recordings with neural face-swapped sequences. Grouped strictly by video ID prior to splitting to guarantee zero subject or frame leakage.
 
 ---
 
@@ -139,9 +140,9 @@ docker run -p 7860:7860 deepfake-detector
 
 ## ⚠️ Operational Scope & Known Limitations
 
-* **Photorealistic Human Faces Only:** Optimized for real camera photography and photorealistic deepfakes. Stylized cartoons, anime, and non-face images are automatically intercepted by the face-detection guard.
-* **Lighting & Compression Sensitivity:** Extreme low-light grain, heavy social-media beauty filters, or steep side profiles may affect confidence scores.
-* **Visual-Only Forensics:** Evaluates spatial and temporal visual artifacts without audio deepfake spectrogram analysis.
+- **Photorealistic Human Faces Only:** Optimized for real camera photography and photorealistic deepfakes. Stylized cartoons, anime, and non-face images are automatically intercepted by the face-detection guard.
+- **Lighting & Compression Sensitivity:** Extreme low-light grain, heavy social-media beauty filters, or steep side profiles may affect confidence scores.
+- **Visual-Only Forensics:** Evaluates spatial and temporal visual artifacts without audio deepfake spectrogram analysis.
 
 ---
 
